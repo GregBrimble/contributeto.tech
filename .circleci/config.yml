@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  deploy:
+    docker:
+      - image: circleci/ubuntu
+    steps:
+      - run:
+        name: Deploy to Dreamhost
+        command: |
+          mkdir -p ~/.ssh
+          chmod 600 -R ~/.ssh
+          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+          chmod 700 ~/.ssh/known_hosts
+          ssh $SSH_USERNAME@$SSH_HOST 'sh ~/contributeto.tech/update.sh'
