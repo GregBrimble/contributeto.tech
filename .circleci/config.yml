@@ -1,14 +1,26 @@
 version: 2
 jobs:
-  deploy:
+  build:
     docker:
-      - image: circleci/ubuntu
+      - image: ubuntu:14.04
+
+    working_directory: /tmp/my_app
+
     steps:
-      - run:
-        name: Deploy to Dreamhost
-        command: |
+      - checkout
+
+      - run: |
           mkdir -p ~/.ssh
           chmod 600 -R ~/.ssh
           ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
           chmod 700 ~/.ssh/known_hosts
           ssh $SSH_USERNAME@$SSH_HOST 'sh ~/contributeto.tech/update.sh'
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: master
