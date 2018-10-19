@@ -11,7 +11,7 @@ jobs:
 
       - run: |
           apt-get update
-          apt-get install -y openssh
+          apt-get install -y ssh
 
       - run: |
           mkdir -p ~/.ssh
