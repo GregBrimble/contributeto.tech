@@ -2,8 +2,10 @@ from os import getenv
 
 from flask import Flask, render_template, redirect, url_for
 from flask_dance.contrib.github import make_github_blueprint, github
+from werkzeug.contrib.fixers import ProxyFix
 
 api = Flask(__name__, template_folder='../frontend')
+api.wsgi_app = ProxyFix(api.wsgi_app)
 api.debug = True
 api.secret_key = getenv('SECRET_KEY')
 
