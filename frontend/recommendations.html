@@ -19,28 +19,34 @@
                 <div class="card-deck" ng-controller="recommendationDictController">
                     <div ng-repeat="recommendation in recommendations">
                         <div class="card">
+                            <div ng-bind="recommendation"></div>
                             <div class="card-body">
                                 <nav aria-label="Page navigation example">
                                     <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Because you use: <span ng-bind="userProjects[$index]"></span></p>
+                                    <p class="card-text">Because you use: <span ng-bind="userProjects[$index].languages.edges[0].node.name"></span></p>
                                     <p class="card-text">
-                                        <small class="text-muted">Last updated 3 mins ago</small>
+                                        <small class="text-muted">Sup</small>
                                     </p>
                             </div>
                         </div>
                         <div ng-repeat="reporecommendation in recommendation">
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title" ng-bind="reporecommendation.name"></h5>
-                                    <p class="card-text">We recommend <span ng-bind="reporecommendation"></span></p>
+                                    <h5 class="card-title" ></h5>
+                                    <p class="card-text">We recommend </p>
                                     <div class="card">
                                         <div class="card-body">
-                                            <h5 class="card-title">[Repo name]</h5>
-                                            <p class="card-text">[Repo text]</p>
+                                            <h5 class="card-title" ng-bind="reporecommendation.name"></h5>
+                                            <p class="card-text" ng-bind-html="reporecommendation.shortDescriptionHTML"></p>
+                                        </div>
+                                        <div ng-controller="detailsDictController">
+                                          <ul class="list-group list-group-flush">
+                                            <li class="list-group-item" ng-bind="details"></li>
+                                          </ul>
                                         </div>
                                     </div>
                                     <p class="card-text">
-                                        <small class="text-muted">Last updated 3 mins ago</small>
+                                        <small class="text-muted" ng-bind="reporecommendation.reason"></small>
                                     </p>
                                 </div>
                             </div>
@@ -66,10 +72,10 @@
     {#                    <div class="card">#}
     {#                        <div class="card-body">#}
     {#                            <h5 class="card-title">Card title</h5>#}
-    {#                            <p class="card-text">We recommend <span ng-bind="recommendations[1]"></span></p>#}
+    {#                            <p class="card-text">We recommend </p>#}
     {#                            <div class="card">#}
     {#                                <div class="card-body">#}
-    {#                                    <h5 class="card-title">[Repo name]</h5>#}
+    {#                                    <h5 class="card-title"><span ng-bind="recommendations[1]"></span></h5>#}
     {#                                    <p class="card-text">[Repo text]</p>#}
     {#                                </div>#}
     {#                            </div>#}

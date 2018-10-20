@@ -5,7 +5,6 @@ from flask_dance.contrib.github import github
 
 api = Blueprint('api', __name__)
 
-
 def make_request(query, variables=None):
     resp = github.post('/graphql', json={'query': query, 'variables': dumps(variables)})
 
