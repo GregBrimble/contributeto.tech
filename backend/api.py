@@ -138,7 +138,6 @@ query interestedInRepositories($queryString: String!) {
 def get_recommendations():
     contributed_to_repositories = get_contributed_to_repositories()
     recommendations = []
-    print(contributed_to_repositories)
 
     for repository in contributed_to_repositories['data']['viewer']['repositoriesContributedTo']['edges']:
         repository_recommendations = [repository['node']]
