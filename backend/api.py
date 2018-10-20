@@ -5,24 +5,37 @@ from flask_dance.contrib.github import github
 
 api = Blueprint('api', __name__)
 
-"""
-fragment interestedInDetails on Repository {
-  ...contributedToDetails
-  openIssues: issues(states:OPEN, first:5, orderBy:{field:CREATED_AT, direction:ASC}){
-    totalCount
-    edges{
-      node{
-        url
-        title
-        bodyHTML
-        reactions{
-          totalCount
+
+def get_interested_in_details():
+    return make_request("""
+    fragment interestedInDetails on Repository {
+      openIssues: issues(states:OPEN, first:5, orderBy:{field:CREATED_AT, direction:ASC}){
+        totalCount
+        edges{
+          node{
+            url
+            title
+            bodyHTML
+            reactions{
+              totalCount
+            }
+          }
+        }
+      }
+    
+    query interestedInDetailsQuery {
+      viewer{
+        (first:5){
+          edges{
+            node{
+              ...interestedInDetails
+            }
+          }
         }
       }
     }
-  }
-}
-"""
+    }
+    """)
 
 
 def make_request(query):
@@ -114,3 +127,10 @@ def get_recommendations():
         recommendations.append(repository_recommendations)
 
     return jsonify(recommendations)
+
+
+@api.route('/details')
+def get_details():
+    details = get_interested_in_details()
+    print(details)
+    return jsonify(get_interested_in_details())
