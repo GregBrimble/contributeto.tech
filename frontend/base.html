@@ -12,8 +12,24 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
           crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-resource/1.7.5/angular-resource.min.js"></script>
 </head>
 <body>
+<div ng-app="contributetotechapp">
     {% block body %}{% endblock %}
+</div>
+<script>
+    var app = angular.module('contributetotechapp', ['ngResource']);
+
+    app.factory('MeFactory', function ($resource) {
+        return $resource('/api/me');
+    });
+
+    app.controller('MeController', function MeController($scope, MeFactory) {
+        MeFactory.get(function (data) {
+            $scope.data = JSON.stringify(data);
+        });
+    });
+</script>
 </body>
 </html>
