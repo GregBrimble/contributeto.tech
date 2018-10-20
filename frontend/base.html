@@ -13,13 +13,14 @@
           crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-resource/1.7.5/angular-resource.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular-sanitize.js"></script>
 </head>
 <body>
 <div ng-app="contributetotechapp">
     {% block body %}{% endblock %}
 </div>
 <script>
-    var app = angular.module('contributetotechapp', ['ngResource']);
+    var app = angular.module('contributetotechapp', ['ngResource', 'ngSanitize']);
 
     app.factory('MeFactory', function ($resource) {
         return $resource('/api/me');
@@ -40,6 +41,7 @@
         recommendationDictFactory.query(function (data) {
             $scope.userProjects = data.map(function(tuple) { return tuple[0] });
             $scope.recommendations = data.map(function(tuple) { return [tuple[1], tuple[2], tuple[3]] });
+            console.log($scope.recommendations)
         });
     });
 

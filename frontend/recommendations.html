@@ -5,14 +5,12 @@
             <div class="container">
                 <div class="card-deck" ng-controller="recommendationDictController">
                     <div ng-repeat="recommendation in recommendations">
+                        <br>
                         <div class="card">
-                            <div ng-bind="recommendation"></div>
                             <div class="card-body">
                                 <nav aria-label="Page navigation example">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Because you use: <span ng-bind="userProjects[$index].languages.edges[0].node.name"></span></p>
+                                    <h5 class="card-title">Because you ❤ <b><span ng-bind="userProjects[$index].languages.edges[0].node.name"></span></b></h5>
                                     <p class="card-text">
-                                        <small class="text-muted">Sup</small>
                                     </p>
                             </div>
                         </div>
@@ -21,16 +19,15 @@
                                 <div class="card-body">
                                     <h5 class="card-title" ></h5>
                                     <p class="card-text">We recommend </p>
-                                    <div class="card">
+                                    <div class="card" width="50px">
                                         <div class="card-body">
                                             <h5 class="card-title" ng-bind="reporecommendation.name"></h5>
-                                            <p class="card-text" ng-bind-html="reporecommendation.shortDescriptionHTML"></p>
+                                            <div class="card-text" ><span>{{ '{{reporecommendation.shortDescriptionHTML | limitTo:50}}{{reporecommendation.shortDescriptionHTML.length > 50 ? "..." : ""}}' }}</span></div>
                                         </div>
-                                        <div ng-controller="detailsDictController">
                                           <ul class="list-group list-group-flush">
-                                            <li class="list-group-item" ng-bind="details"></li>
+                                            <li class="list-group-item"><span>{{ '{{reporecommendation.openIssues.edges[0].node.bodyHTML | limitTo:50}}{{recommendation[0].openIssues.edges[0].node.bodyHTML.length > 50 ? "..." : ""}}' }}</span>
+                                            </li><a type="button" class="btn btn-primary" ng-href="{{ '{{reporecommendation.openIssues.edges[0].node.url}}' }}">Give it a shot</a>
                                           </ul>
-                                        </div>
                                     </div>
                                     <p class="card-text">
                                         <small class="text-muted" ng-bind="reporecommendation.reason"></small>
