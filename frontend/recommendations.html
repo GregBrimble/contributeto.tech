@@ -9,6 +9,9 @@
 {#{% endwith %}#}
 {% extends "base.html" %}
 {% block body %}
+    <div ng-controller="MeController">
+        <div ng-bind="data"></div>
+    </div>
     <div id="r1">
         <div class="jumbotron jumbotron-fluid">
             <div class="container">
