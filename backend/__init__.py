@@ -28,3 +28,7 @@ def recommendations():
     resp = github.get('/user')
     assert resp.ok
     return 'You are @{login} on GitHub'.format(login=resp.json()['login'])
+
+
+if __name__ == '__main__':
+    api.run(port=5000)
