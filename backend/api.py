@@ -5,6 +5,7 @@ from flask_dance.contrib.github import github
 
 api = Blueprint('api', __name__)
 
+
 def make_request(query, variables=None):
     resp = github.post('/graphql', json={'query': query, 'variables': dumps(variables)})
 
@@ -51,7 +52,7 @@ def get_contributed_to_repositories():
 
     query contributedToRepositories {
       viewer{
-        repositoriesContributedTo(first:5, orderBy:{field:STARGAZERS,direction:DESC}){
+        repositoriesContributedTo(first:3, orderBy:{field:STARGAZERS,direction:DESC}){
           edges{
             node{
               ...contributedToDetails
@@ -64,8 +65,7 @@ def get_contributed_to_repositories():
 
 
 def get_recommendations_for_repository(repository):
-    repository['reason'] = 'because I said so'
-    thing = make_request("""
+    response = make_request("""
     
 fragment contributedToDetails on Repository {
   name
@@ -130,13 +130,15 @@ query interestedInRepositories($queryString: String!) {
   }
 }
 """, variables={'queryString': 'language:Python'})
-    return thing['data']['search']['edges']
+
+    return [edge['node'] for edge in response['data']['search']['edges']]
 
 
 @api.route('/recommendations')
 def get_recommendations():
     contributed_to_repositories = get_contributed_to_repositories()
     recommendations = []
+    print(contributed_to_repositories)
 
     for repository in contributed_to_repositories['data']['viewer']['repositoriesContributedTo']['edges']:
         repository_recommendations = [repository['node']]
