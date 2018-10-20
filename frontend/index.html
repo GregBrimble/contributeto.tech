@@ -1,21 +1,5 @@
-{#<script src="//cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>#}
-{#<script src="//unpkg.com/react/umd/react.development.js" crossorigin></script>#}
-{#<script src="//unpkg.com/react-dom/umd/react-dom.development.js" crossorigin></script>#}
-
-<html>
-<head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
-          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
-          crossorigin="anonymous">
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.12.0/bootstrap-social.min.css"
-          crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-          crossorigin="anonymous">
-
-</head>
-<body>
+{% extends "base.html" %}
+{% block body %}
 <div id="r1">
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
@@ -161,5 +145,4 @@
 {#    );#}
 {##}
 {#</script>#}
-</body>
-</html>
+{% endblock %}
