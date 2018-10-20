@@ -36,9 +36,8 @@ def index():
 def recommendations():
     if not github.authorized:
         return redirect(url_for('index'))
-    
-    return render_template('recommendations.html')
 
+    return render_template('recommendations.html')
 
 
 if __name__ == '__main__':
