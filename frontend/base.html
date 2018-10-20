@@ -30,6 +30,25 @@
             $scope.data = JSON.stringify(data);
         });
     });
+
+    app.factory('recommendationDictFactory', function ($resource) {
+        return $resource('/api/recommendations');
+    });
+
+    app.controller('recommendationDictController', function MeController($scope, MeFactory) {
+        MeFactory.get(function (data) {
+            var keys = [];
+            var vals = [];
+            console.log("DATA! " + data);
+            for(var recommendation in data){
+                keys.push(recommendation[0]);
+                vals.push(recommendation.slice(1))
+            }
+
+            $scope.userProjects = keys;
+            $scope.recommendations = vals;
+        });
+    });
 </script>
 </body>
 </html>

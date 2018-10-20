@@ -12,14 +12,16 @@
     <div ng-controller="MeController">
         <div ng-bind="data"></div>
     </div>
+    <h6> {{ number }}:HERE</h6>
     <div id="r1">
         <div class="jumbotron jumbotron-fluid">
             <div class="container">
-                <div class="card-deck">
-                    <div class="card">
+                <div class="card-deck" ng-controller="recommendationDictController">
+                    <div class="card" >
                         <div class="card-body">
+                            <nav aria-label="Page navigation example">
                             <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Because you use [Something]</p>
+                            <p class="card-text">Because you use: <span ng-bind="userProjects[0]"></span></p>
                             <p class="card-text">
                                 <small class="text-muted">Last updated 3 mins ago</small>
                             </p>
@@ -28,7 +30,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
-                            <p class="card-text">We recommend [something else]</p>
+                            <p class="card-text">We recommend <span ng-bind="recommendations[0]"></span></p>
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">[Repo name]</h5>
@@ -51,7 +53,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
-                            <p class="card-text">Because you use [Something]</p>
+                            <p class="card-text">Because you use <span ng-bind="userProjects[1]"></span></p>
                             <p class="card-text">
                                 <small class="text-muted">Last updated 3 mins ago</small>
                             </p>
@@ -60,7 +62,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Card title</h5>
-                            <p class="card-text">We recommend [something else]</p>
+                            <p class="card-text">We recommend <span ng-bind="recommendations[1]"></span></p>
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">[Repo name]</h5>
@@ -75,6 +77,15 @@
                 </div>
             </div>
         </div>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="/">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="recommendations/1">1</a></li>
+            <li class="page-item"><a class="page-link" href="recommendations/2">2</a></li>
+            <li class="page-item"><a class="page-link" href="recommendations/3">3</a></li>
+            <li class="page-item"><a class="page-link" href="/">Next</a></li>
+          </ul>
+        </nav>
     </div>
 {#    <script type="text/babel">#}
 {##}

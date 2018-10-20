@@ -34,10 +34,17 @@ def index():
 
 @app.route('/recommendations')
 def recommendations():
-    if not github.authorized:
-        return redirect(url_for('index'))
+    #if not github.authorized:
+    #    return redirect(url_for('index'))
 
-    return render_template('recommendations.html')
+    return render_template('recommendations.html', number=0)
+
+# @app.route('/recommendations/{number}')
+# def recommendationsWithNumber(req, resp, *, number):
+#     #if not github.authorized:
+#     #    return redirect(url_for('index'))
+#
+#     return render_template('recommendations.html', number=number)
 
 
 if __name__ == '__main__':
