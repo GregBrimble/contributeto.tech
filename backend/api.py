@@ -3,6 +3,8 @@ from json import JSONDecodeError, dumps
 from flask import Blueprint, Response, jsonify
 from flask_dance.contrib.github import github
 
+from backend.queries import interested_in_repositories_query, contributed_to_repositories_query
+
 api = Blueprint('api', __name__)
 
 
@@ -16,121 +18,11 @@ def make_request(query, variables=None):
 
 
 def get_contributed_to_repositories():
-    return make_request("""
-    fragment contributedToDetails on Repository {
-      name
-      url
-      stargazers{
-        totalCount
-      }
-      forkCount
-      shortDescriptionHTML
-      languages(first:3, orderBy:{field:SIZE, direction: DESC}) {
-        edges {
-          node {
-            name
-            color
-          }
-        }
-      }
-      repositoryTopics(first:20){
-        edges{
-          node{
-            topic{
-              name
-              relatedTopics{
-                name
-              }
-              stargazers{
-                totalCount
-              }
-            }
-          }
-        }
-      }
-    }
-
-    query contributedToRepositories {
-      viewer{
-        repositoriesContributedTo(first:3, orderBy:{field:STARGAZERS,direction:DESC}){
-          edges{
-            node{
-              ...contributedToDetails
-            }
-          }
-        }
-      }
-    }
-    """)
+    return make_request(contributed_to_repositories_query)
 
 
 def get_recommendations_for_repository(repository):
-    response = make_request("""
-    
-fragment contributedToDetails on Repository {
-  name
-  url
-  stargazers{
-    totalCount
-  }
-  forkCount
-  shortDescriptionHTML
-  languages(first:3, orderBy:{field:SIZE, direction: DESC}) {
-    edges {
-      node {
-        name
-        color
-      }
-    }
-  }
-  repositoryTopics(first:20){
-    edges{
-      node{
-        topic{
-          name
-          relatedTopics{
-            name
-          }
-          stargazers{
-            totalCount
-          }
-        }
-      }
-    }
-  }
-}
-
-fragment interestedInDetails on Repository {
-  ...contributedToDetails
-  openIssues: issues(states:OPEN, first:5, orderBy:{field:CREATED_AT, direction:ASC}){
-    totalCount
-    edges{
-      node{
-        url
-        title
-        bodyHTML
-        reactions{
-          totalCount
-        }
-      }
-    }
-  }
-}
-
-query interestedInRepositories($queryString: String!) {
-  search(query:$queryString, type:REPOSITORY, first:5){
-    edges{
-      node{
-        ... on Repository {
-          name
-          ...interestedInDetails
-        }
-      }
-    }
-  }
-}
-""", variables={'queryString': 'language:Python'})
-
+    response = make_request(interested_in_repositories_query, variables={'queryString': 'language:Python'})
     return [edge['node'] for edge in response['data']['search']['edges']]
 
 
