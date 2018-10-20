@@ -20,13 +20,31 @@ crossorigin="anonymous">
     let styles = {
         color: "#fff"
     };
+    let mainButtonStyle = {
+        color: "#fff",
+        background: "#34d058",
+        backgroundImage: "linear-gradient(-180deg,#34d058,#28a745 90%)"
+    };
+    let octoStyle={
+        justifyContent: 'center',
+        alignItems: 'center'
+    };
     ReactDOM.render(
       <div className="jumbotron jumbotron-fluid">
           <div className="container">
               <h1 className="display-4">contributeto.tech</h1>
               <p className="lead">Find Open Source repositories tailored to your skills.
               </p>
-              <a href="{{ url_for('github.login') }}" id="github-button" type="button" className="btn btn-block btn-social btn-github" style={styles}>
+
+              <div className="row">
+                  <div className="col-sm-4"></div>
+                  <div className="col-sm-4">
+                      <img width="200px" src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png" style={octoStyle}></img>
+                  </div>
+                  <div className="col-sm-4"></div>
+                </div>
+
+              <a href="{{ url_for('github.login') }}" id="github-button" type="button" className="btn btn-block btn-social btn-github" style={mainButtonStyle}>
                   <i className="fa fa-github"></i> Sign in with GitHub
               </a>
           </div>
@@ -37,28 +55,32 @@ crossorigin="anonymous">
     ReactDOM.render(
         <div className="card">
             <div className="card-header">
-                Featured
+                Featured Projects
             </div>
             <div className="card-body">
-                <h5 className="card-title">Special title treatment</h5>
+                <h5 className="card-title">Daily Picks</h5>
                 <div className="row">
                     <div className="col-sm-6">
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title">Special title treatment</h5>
-                                <p className="card-text">With supporting text below as a natural lead-in to additional
-                                    content.</p>
-                                <a href="#" className="btn btn-primary">Go somewhere</a>
+                                <h5 className="card-title">Python Responder</h5>
+                                <p className="card-text">Responder is a web service framework, written for human beings.
+                                </p>
+                                <a href="https://github.com/kennethreitz/responder/" id="github-button" type="button" className="btn btn-social-icon btn-lg btn-github" style={styles}>
+                                    <i className="fa fa-github"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
                     <div className="col-sm-6">
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title">Special title treatment</h5>
-                                <p className="card-text">With supporting text below as a natural lead-in to additional
-                                    content.</p>
-                                <a href="#" className="btn btn-primary">Go somewhere</a>
+                                <h5 className="card-title">TensorFlow Course</h5>
+                                <p className="card-text">Simple and ready-to-use tutorials for TensorFlow with source-code and documentation.
+                                </p>
+                                <a href="https://github.com/open-source-for-science/TensorFlow-Course" id="github-button" type="button" className="btn btn-social-icon btn-lg btn-github" style={styles}>
+                                    <i className="fa fa-github"></i>
+                                </a>
                             </div>
                         </div>
                     </div>

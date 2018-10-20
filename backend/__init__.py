@@ -29,8 +29,9 @@ def index():
 
 @app.route('/recommendations')
 def recommendations():
-    resp = github.get('/user')
-    return 'You are @{login} on GitHub'.format(login=resp.json()['login'])
+    #resp = github.get('/user')
+    #return 'You are @{login} on GitHub'.format(login=resp.json()['login'])
+    return render_template('recommendations.html')
 
 
 @app.route('/graphql_test')
