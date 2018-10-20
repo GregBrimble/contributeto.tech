@@ -1,65 +1,17 @@
-from json import JSONDecodeError
+from json import JSONDecodeError, dumps
 
 from flask import Blueprint, Response, jsonify
 from flask_dance.contrib.github import github
 
 api = Blueprint('api', __name__)
 
-
-def get_interested_in_details():
-    return make_request("""
-    fragment interestedInDetails on Repository {
-      openIssues: issues(states:OPEN, first:5, orderBy:{field:CREATED_AT, direction:ASC}){
-        totalCount
-        edges{
-          node{
-            url
-            title
-            bodyHTML
-            reactions{
-              totalCount
-            }
-          }
-        }
-      }
-    
-    query interestedInDetailsQuery {
-      viewer{
-        (first:5){
-          edges{
-            node{
-              ...interestedInDetails
-            }
-          }
-        }
-      }
-    }
-    }
-    """)
-
-
-def make_request(query):
-    resp = github.post('/graphql', json={'query': query})
+def make_request(query, variables=None):
+    resp = github.post('/graphql', json={'query': query, 'variables': dumps(variables)})
 
     try:
         return resp.json()
     except JSONDecodeError:
         return Response(resp.text, status=503)
-
-
-@api.route('/me')
-def me():
-    return jsonify(make_request("""{
-  viewer {
-    login
-  }
-  rateLimit {
-    limit
-    cost
-    remaining
-    resetAt
-  }
-}"""))
 
 
 def get_contributed_to_repositories():
@@ -113,7 +65,72 @@ def get_contributed_to_repositories():
 
 def get_recommendations_for_repository(repository):
     repository['reason'] = 'because I said so'
-    return repository, repository, repository
+    thing = make_request("""
+    
+fragment contributedToDetails on Repository {
+  name
+  url
+  stargazers{
+    totalCount
+  }
+  forkCount
+  shortDescriptionHTML
+  languages(first:3, orderBy:{field:SIZE, direction: DESC}) {
+    edges {
+      node {
+        name
+        color
+      }
+    }
+  }
+  repositoryTopics(first:20){
+    edges{
+      node{
+        topic{
+          name
+          relatedTopics{
+            name
+          }
+          stargazers{
+            totalCount
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment interestedInDetails on Repository {
+  ...contributedToDetails
+  openIssues: issues(states:OPEN, first:5, orderBy:{field:CREATED_AT, direction:ASC}){
+    totalCount
+    edges{
+      node{
+        url
+        title
+        bodyHTML
+        reactions{
+          totalCount
+        }
+      }
+    }
+  }
+}
+
+query interestedInRepositories($queryString: String!) {
+  search(query:$queryString, type:REPOSITORY, first:5){
+    edges{
+      node{
+        ... on Repository {
+          name
+          ...interestedInDetails
+        }
+      }
+    }
+  }
+}
+""", variables={'queryString': 'language:Python'})
+    return thing['data']['search']['edges']
 
 
 @api.route('/recommendations')
@@ -127,10 +144,3 @@ def get_recommendations():
         recommendations.append(repository_recommendations)
 
     return jsonify(recommendations)
-
-
-@api.route('/details')
-def get_details():
-    details = get_interested_in_details()
-    print(details)
-    return jsonify(get_interested_in_details())
