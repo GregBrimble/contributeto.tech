@@ -53,6 +53,10 @@ def get_contributed_to_repositories():
     return make_request("""
     fragment contributedToDetails on Repository {
       name
+      url
+      stargazers{
+        totalCount
+      }
       forkCount
       shortDescriptionHTML
       languages(first:3, orderBy:{field:SIZE, direction: DESC}) {
@@ -94,6 +98,18 @@ def get_contributed_to_repositories():
     """)
 
 
+def get_recommendations_for_repository(repository):
+    return (repository, repository, repository)
+
+
 @api.route('/recommendations')
 def get_recommendations():
-    return jsonify(get_contributed_to_repositories())
+    contributed_to_repositories = get_contributed_to_repositories()
+    recommendations = []
+
+    for repository in contributed_to_repositories['data']['viewer']['repositoriesContributedTo']['edges']:
+        repository_recommendations = [repository['node']]
+        repository_recommendations.extend(get_recommendations_for_repository(repository['node']))
+        recommendations.append(repository_recommendations)
+
+    return jsonify(recommendations)
