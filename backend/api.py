@@ -26,7 +26,7 @@ def generate_query_from_repository(repository):
     repository_language = repository['languages']['edges'][0]['node']['name']
     language_query = {
         'string': 'language:{language}'.format(language=repository_language),
-        'reason': 'Because you use {language}'.format(language=repository_language)
+        'reason': 'Because you ❤ {language}'.format(language=repository_language)
     }
 
     query = language_query
@@ -35,7 +35,7 @@ def generate_query_from_repository(repository):
         random_repository_topic = choice(repository['repositoryTopics']['edges'])['node']['topic']['name']
         topics_query = {
             'string': 'topic:{topic}'.format(topic=random_repository_topic),
-            'reason': 'Because you contribute with {topic}'.format(topic=random_repository_topic)
+            'reason': 'Because you ❤ working with {topic}'.format(topic=random_repository_topic)
         }
 
         query = choice([language_query, topics_query])
