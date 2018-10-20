@@ -5,7 +5,7 @@ from flask import Flask, render_template, redirect, url_for
 from flask_dance.contrib.github import make_github_blueprint, github
 from werkzeug.contrib.fixers import ProxyFix
 
-from api import api
+from backend.api import api
 
 load_dotenv()
 
@@ -34,8 +34,9 @@ def index():
 
 @app.route('/recommendations')
 def recommendations():
-    #resp = github.get('/user')
-    #return 'You are @{login} on GitHub'.format(login=resp.json()['login'])
+    if not github.authorized:
+        return redirect(url_for('index'))
+    
     return render_template('recommendations.html')
 
 
