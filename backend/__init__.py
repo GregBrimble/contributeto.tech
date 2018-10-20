@@ -12,6 +12,7 @@ api.secret_key = getenv('SECRET_KEY')
 github_oauth_blueprint = make_github_blueprint(
     client_id=getenv('GITHUB_OAUTH_CLIENT_ID'),
     client_secret=getenv('GITHUB_OAUTH_CLIENT_ID'),
+    redirect_to='recommendations'
 )
 api.register_blueprint(github_oauth_blueprint, url_prefix='/login')
 
@@ -33,3 +34,7 @@ def recommendations():
     resp = github.get('/user')
     return resp.text
     return 'You are @{login} on GitHub'.format(login=resp.json()['login'])
+
+
+if __name__ == '__main__':
+    api.run()
