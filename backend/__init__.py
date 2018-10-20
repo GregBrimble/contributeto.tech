@@ -17,6 +17,7 @@ app.secret_key = getenv('SECRET_KEY')
 github_oauth_blueprint = make_github_blueprint(
     client_id=getenv('GITHUB_OAUTH_CLIENT_ID'),
     client_secret=getenv('GITHUB_OAUTH_CLIENT_SECRET'),
+    scope='read:user,repo,user:email',
     redirect_to='recommendations'
 )
 app.register_blueprint(github_oauth_blueprint, url_prefix='/login')
