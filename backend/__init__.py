@@ -1,13 +1,10 @@
 from os import getenv
 
-from dotenv import load_dotenv
 from flask import Flask, render_template, redirect, url_for
 from flask_dance.contrib.github import make_github_blueprint, github
 from werkzeug.contrib.fixers import ProxyFix
 
 from backend.api import api
-
-load_dotenv()
 
 app = Flask(__name__, template_folder='../frontend')
 app.wsgi_app = ProxyFix(app.wsgi_app)
@@ -35,10 +32,11 @@ def index():
 
 @app.route('/recommendations')
 def recommendations():
-    #if not github.authorized:
-    #    return redirect(url_for('index'))
+    if not github.authorized:
+        return redirect(url_for('index'))
 
     return render_template('recommendations.html', number=0)
+
 
 # @app.route('/recommendations/{number}')
 # def recommendationsWithNumber(req, resp, *, number):
