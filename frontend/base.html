@@ -35,18 +35,12 @@
         return $resource('/api/recommendations');
     });
 
-    app.controller('recommendationDictController', function MeController($scope, MeFactory) {
-        MeFactory.get(function (data) {
-            var keys = [];
-            var vals = [];
-            console.log("DATA! " + data);
-            for(var recommendation in data){
-                keys.push(recommendation[0]);
-                vals.push(recommendation.slice(1))
-            }
-
-            $scope.userProjects = keys;
-            $scope.recommendations = vals;
+    app.controller('recommendationDictController', function recommendationDictController($scope, recommendationDictFactory) {
+        $scope.recommendations = [{}, {}, {}];
+        recommendationDictFactory.query(function (data) {
+            $scope.userProjects = data.map(function(tuple) { return tuple[0] });
+            $scope.recommendations = data.map(function(tuple) { return [tuple[1], tuple[2], tuple[3]] });
+            console.debug($scope.recommendations);
         });
     });
 </script>

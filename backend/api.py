@@ -99,7 +99,8 @@ def get_contributed_to_repositories():
 
 
 def get_recommendations_for_repository(repository):
-    return (repository, repository, repository)
+    repository['reason'] = 'because I said so'
+    return repository, repository, repository
 
 
 @api.route('/recommendations')
