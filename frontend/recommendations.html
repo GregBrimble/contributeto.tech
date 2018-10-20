@@ -1,18 +1,5 @@
-{#{% with messages = get_flashed_messages() %}#}
-{#  {% if messages %}#}
-{#    <ul class=flashes>#}
-{#    {% for message in messages %}#}
-{#      <li>{{ message }}</li>#}
-{#    {% endfor %}#}
-{#    </ul>#}
-{#  {% endif %}#}
-{#{% endwith %}#}
 {% extends "base.html" %}
 {% block body %}
-    <div ng-controller="MeController">
-        <div ng-bind="data"></div>
-    </div>
-    <h6> {{ number }}:HERE</h6>
     <div id="r1">
         <div class="jumbotron jumbotron-fluid">
             <div class="container">

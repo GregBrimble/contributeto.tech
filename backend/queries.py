@@ -54,7 +54,7 @@ interested_in_details_fragment = """
 
 fragment interestedInDetails on Repository {{
   ...contributedToDetails
-  openIssues: issues(states:OPEN, first:3, orderBy:{{field:CREATED_AT, direction:ASC}}){{
+  openIssues: issues(states:OPEN, first:5, orderBy:{{field:COMMENTS, direction:DESC}}){{
     totalCount
     edges{{
       node{{
