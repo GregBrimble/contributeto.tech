@@ -29,4 +29,4 @@ More features:
 * More user exposed controls in the application, allowing the user to refine and/or search the suggested issues (e.g. sorting by old to new, popular etc.)
 * Expose repository licenses to the application and exclude any non-OSS-friendly projects
 * Implement a lazy-load endless scroll in the application to continuely generate new suggestions of repositories and issues
-* Integration with [https://www.bountysource.com/](Bountysource) or similar, showing the monetary reward for particularly challenging issues.
+* Integration with [Bountysource](https://www.bountysource.com/) or similar, showing the monetary reward for particularly challenging issues.
