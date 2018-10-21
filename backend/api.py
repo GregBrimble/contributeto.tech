@@ -4,7 +4,7 @@ from random import choice
 from flask import Blueprint, Response, jsonify
 from flask_dance.contrib.github import github
 
-from backend.queries import interested_in_repositories_query, contributed_to_repositories_query
+from backend.queries import interested_in_repositories_query, contributed_to_repositories_query, beginners_query
 
 api = Blueprint('api', __name__)
 
@@ -49,6 +49,12 @@ def get_recommendations_for_repository(repository, query):
     return [edge['node'] for edge in response['data']['search']['edges']]
 
 
+def get_recommendations_for_repository_beginner(repository, query):
+    full_query_string = '{query_string} help-wanted-issues:>3'.format(query_string=query['string'])
+    response = make_request(beginners_query, variables={'queryString': full_query_string})
+    return [edge['node'] for edge in response['data']['search']['edges']]
+
+
 @api.route('/recommendations')
 def get_recommendations():
     contributed_to_repositories = get_contributed_to_repositories()
@@ -58,7 +64,18 @@ def get_recommendations():
         query = generate_query_from_repository(repository['node'])
         repository['node']['reason'] = query['reason']
         repository_recommendations = [repository['node']]
-        repository_recommendations.extend(get_recommendations_for_repository(repository['node'], query))
+        rawResult = get_recommendations_for_repository_beginner(repository['node'], query)
+        beginnerResult = []
+        for res in rawResult:
+            if res['openIssues']['edges']:
+                for label in res['openIssues']['edges'][0]['node']['labels']['edges']:
+                    matching = [label[l] for l in label if label[l]['name'] in ["Easy", "good first issue"]]
+                    if len(matching):
+                        beginnerResult.append(res)
+
+        print("ONE", rawResult)
+        print("TWO", beginnerResult)
+        repository_recommendations.extend(beginnerResult)
         recommendations.append(repository_recommendations)
 
     return jsonify(recommendations)

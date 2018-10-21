@@ -28,7 +28,7 @@
                 </span>
             </div>
         </div>
-        <div class="jumbotron jumbotron-fluid" ng-if="!blockLoading" style="background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
+        <div class="jumbotron jumbotron-fluid" ng-if="!blockLoading" style="background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat; min-width: 100%; height: auto; min-height: 100%">
             <div class="container" style="height: 100%">
               <div class="row" style="margin-bottom: 20px;">
                     <div class="col col-md-3"><h2>Because...</h2></div>
@@ -38,10 +38,8 @@
               <div ng-controller="recommendationDictController">
                 <div class="card-deck">
                     <div ng-repeat="recommendation in recommendations">
-                        <div class="row" ng-if="recommendation.length > 1">
                             <div class="col col-md-3">
-                                <div class="card" style="height: 100%;"
-                                     ng-style="{'border-top-color': userProjects[$index].languages.edges[0].node.color}">
+                                <div class="card" style="height: 100%;" ng-style="{'border-top-color': userProjects[$index].languages.edges[0].node.color}">
                                     <div class="card-body">
                                         <h5 class="card-title" ng-bind="userProjects[$index].reason"></h5>
                                         <h6 class="card-subtitle text-muted" ng-bind="userProjects[$index].name"></h6>
@@ -52,6 +50,7 @@
                             <div class="col col-md-8">
                                 <div class="card-deck">
                                     <div class="card" ng-repeat="reporecommendation in recommendation"
+                                    <div ng-bind="reporecommendation.openIssues.edges[0].node.labels.edges.length"
                                          ng-style="{'border-top-color': reporecommendation.languages.edges[0].node.color}">
                                         <div class="card-body">
                                             <h5 class="card-title" ng-bind="reporecommendation.name"></h5>
