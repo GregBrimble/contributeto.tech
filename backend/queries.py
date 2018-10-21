@@ -38,7 +38,7 @@ contributed_to_repositories_query = """
 
 query contributedToRepositories {{
   viewer{{
-    repositoriesContributedTo(first:3, orderBy:{{field:STARGAZERS,direction:DESC}}){{
+    repositoriesContributedTo(first:4, orderBy:{{field:STARGAZERS,direction:DESC}}){{
       edges{{
         node{{
           ...contributedToDetails
