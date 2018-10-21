@@ -51,6 +51,8 @@
         recommendationDictFactory.query(function (data) {
             $scope.userProjects = data.map(function(tuple) { return tuple[0] });
             $scope.recommendations = data.map(function(tuple) { return [tuple[1], tuple[2], tuple[3]]});
+            console.log($scope.recommendations)
+            console.log($scope.userProjects)
             $scope.blockLoading = false;
         });
     });

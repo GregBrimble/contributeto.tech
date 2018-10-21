@@ -54,7 +54,7 @@ interested_in_details_fragment = """
 
 fragment interestedInDetails on Repository {{
   ...contributedToDetails
-  openIssues: issues(states:OPEN, first:5, orderBy:{{field:COMMENTS, direction:DESC}}){{
+  openIssues: issues(states:OPEN, labels: ["help wanted", "beginner"], first:5, orderBy:{{field:COMMENTS, direction:DESC}}){{
     totalCount
     edges{{
       node{{
@@ -63,6 +63,13 @@ fragment interestedInDetails on Repository {{
         bodyHTML
         reactions{{
           totalCount
+        }}
+        labels(first:10){{
+          edges{{
+            node{{
+              name
+            }}
+          }}
         }}
       }}
     }}
@@ -86,3 +93,48 @@ query interestedInRepositories($queryString: String!) {{
   }}
 }}
 """.format(interested_in_details_fragment=interested_in_details_fragment)
+
+beginners_fragment = """
+{contributed_to_details_fragment}
+
+fragment interestedInDetails on Repository {{
+  ...contributedToDetails
+  openIssues: issues(states:OPEN, labels: ["beginner-friendly", "easy", "starter", "beginner friendly", "beginner", "good first issue"], first:5, orderBy:{{field:COMMENTS, direction:DESC}}){{
+    totalCount
+    edges{{
+      node{{
+        url
+        title
+        bodyHTML
+        reactions{{
+          totalCount
+        }}
+        labels(first:10){{
+          edges{{
+            node{{
+              name
+            }}
+          }}
+        }}
+      }}
+    }}
+  }}
+}}
+""".format(contributed_to_details_fragment=contributed_to_details_fragment)
+
+beginners_query = """
+{beginners_fragment}
+
+query interestedInRepositories($queryString: String!) {{
+  search(query:$queryString, type:REPOSITORY, first:3){{
+    edges{{
+      node{{
+        ... on Repository {{
+          name
+          ...interestedInDetails
+        }}
+      }}
+    }}
+  }}
+}}
+""".format(beginners_fragment=beginners_fragment)
