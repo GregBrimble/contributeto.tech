@@ -3,6 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>contributeto.tech</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
           crossorigin="anonymous">
@@ -26,7 +35,8 @@
     </style>
 </head>
 <body>
-<div ng-app="contributetotechapp" style="background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
+<div ng-app="contributetotechapp"
+     style="background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
     {% block body %}{% endblock %}
 </div>
 <script>
@@ -48,21 +58,25 @@
 
     app.controller('recommendationDictController', function recommendationDictController($scope, recommendationDictFactory) {
         $scope.blockLoading = true;
+        $scope.selectedRepo = {};
+        $scope.selectedIssue = {};
+
+        $scope.selectRepo = function(repository) {
+            $scope.selectedRepo = repository;
+            $scope.selectedIssue = $scope.selectedRepo.openIssues.edges[0];
+        };
+        $scope.selectIssue = function(issue) {
+            $scope.selectedIssue = issue;
+        };
+
         recommendationDictFactory.query(function (data) {
-            $scope.userProjects = data.map(function(tuple) { return tuple[0] });
-            $scope.recommendations = data.map(function(tuple) { return [tuple[1], tuple[2], tuple[3]]});
+            $scope.userProjects = data.map(function (tuple) {
+                return tuple[0]
+            });
+            $scope.recommendations = data.map(function (tuple) {
+                return [tuple[1], tuple[2], tuple[3]]
+            });
             $scope.blockLoading = false;
-        });
-    });
-
-    app.factory('detailsDictFactory', function ($resource) {
-        return $resource('/api/details');
-    });
-
-    app.controller('detailsDictController', function detailsDictController($scope, detailsDictFactory) {
-        detailsDictFactory.query(function (data) {
-            $scope.details = data
-            console.log($scope.details);
         });
     });
 </script>

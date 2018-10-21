@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% block body %}
-<style>
-    html, body {
-        height: 100%;
-        margin: 0;
-        overflow-y: hidden;
-    }
-</style>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow-y: hidden;
+        }
+    </style>
     <div id="r1">
-        <div class="jumbotron jumbotron-fluid" style="background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
+        <div class="jumbotron jumbotron-fluid"
+             style="background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
 
             <div class="card" style=" margin-left: 60px; margin-right: 60px;">
 
@@ -16,12 +17,14 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <h1 class="display-4" style="margin-left: 20px; margin-top: 30px">contributeto.tech</h1>
-                        <p class="lead" style="margin-left: 20px"><i>Find <b>open source</b> repositories tailored to your skills.</i>
+                        <p class="lead" style="margin-left: 20px"><i>Find <b>open source</b> repositories tailored to
+                            your skills.</i>
                         </p>
                     </div>
                     <div class="col-sm-2"></div>
                     <div class="col-sm-4">
-                        <img style="margin-left: 50px; margin-top: -50px; width: 160px" src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png">
+                        <img style="margin-left: 50px; margin-top: -50px; width: 160px"
+                             src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png">
                         <div>
                             <a href="{{ url_for('github.login') }}" id="github-button" type="button"
                                class="btn btn-block btn-social btn-github"
@@ -50,7 +53,9 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">How it works</h5>
-                                <p class="card-text">Contributeto.tech analyses your github account and then matches your most used languages and technologies with open source projects we feel would be suitable for you.
+                                <p class="card-text">Contributeto.tech analyses your github account and then matches
+                                    your most used languages and technologies with open source projects we feel would be
+                                    suitable for you.
                                 </p>
                             </div>
                         </div>
@@ -59,7 +64,10 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">About the creators</h5>
-                                <p class="card-text"><a href="http://www.james-odonnell.com">James</a> and <a href="http://www.gregbrimble.com">Greg</a> are Computer Science students and Hackathon enthusiasts from Edinburgh, Scotland. ContributeTo was built during <a href="https://hackupc.com/">HackUPC</a> 2018, in Barcelona.
+                                <p class="card-text"><a href="http://www.james-odonnell.com">James</a> and <a
+                                        href="http://www.gregbrimble.com">Greg</a> are Computer Science students and
+                                    Hackathon enthusiasts from Edinburgh, Scotland. ContributeTo was built during <a
+                                            href="https://hackupc.com/">HackUPC</a> 2018, in Barcelona.
                                 </p>
                             </div>
                         </div>

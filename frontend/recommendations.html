@@ -1,6 +1,61 @@
 {% extends "base.html" %}
 {% block body %}
-    <div id="r1" ng-controller="recommendationDictController">
+    <div ng-controller="recommendationDictController">
+        <div class="modal fade" tabindex="-1" role="dialog"
+             aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" ng-bind="selectedRepo.name"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col col-md-4">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item list-group-item-action" ng-click="selectIssue(issue)"
+                                        ng-class="{active: selectedIssue == issue}"
+                                        ng-repeat="issue in selectedRepo.openIssues.edges">
+                                        <span ng-bind="issue.node.title"></span>
+                                        <br/>
+                                        <svg class="octicon octicon-smiley text-muted" viewBox="0 0 16 16" version="1.1"
+                                             width="16"
+                                             height="16" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                  d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm4.81 12.81a6.72 6.72 0 0 1-2.17 1.45c-.83.36-1.72.53-2.64.53-.92 0-1.81-.17-2.64-.53-.81-.34-1.55-.83-2.17-1.45a6.773 6.773 0 0 1-1.45-2.17A6.59 6.59 0 0 1 1.21 8c0-.92.17-1.81.53-2.64.34-.81.83-1.55 1.45-2.17.62-.62 1.36-1.11 2.17-1.45A6.59 6.59 0 0 1 8 1.21c.92 0 1.81.17 2.64.53.81.34 1.55.83 2.17 1.45.62.62 1.11 1.36 1.45 2.17.36.83.53 1.72.53 2.64 0 .92-.17 1.81-.53 2.64-.34.81-.83 1.55-1.45 2.17zM4 6.8v-.59c0-.66.53-1.19 1.2-1.19h.59c.66 0 1.19.53 1.19 1.19v.59c0 .67-.53 1.2-1.19 1.2H5.2C4.53 8 4 7.47 4 6.8zm5 0v-.59c0-.66.53-1.19 1.2-1.19h.59c.66 0 1.19.53 1.19 1.19v.59c0 .67-.53 1.2-1.19 1.2h-.59C9.53 8 9 7.47 9 6.8zm4 3.2c-.72 1.88-2.91 3-5 3s-4.28-1.13-5-3c-.14-.39.23-1 .66-1h8.59c.41 0 .89.61.75 1z"></path>
+                                        </svg>
+                                        <span ng-bind="issue.node.reactions.totalCount"></span>
+                                        <svg class="octicon octicon-comment-discussion text-muted" viewBox="0 0 16 16"
+                                             version="1.1" width="16" height="16" aria-hidden="true">
+                                            <path fill-rule="evenodd"
+                                                  d="M15 1H6c-.55 0-1 .45-1 1v2H1c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h1v3l3-3h4c.55 0 1-.45 1-1V9h1l3 3V9h1c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1zM9 11H4.5L3 12.5V11H1V5h4v3c0 .55.45 1 1 1h3v2zm6-3h-2v1.5L11.5 8H6V2h9v6z"></path>
+                                        </svg>
+                                        <span ng-bind="issue.node.comments.totalCount"></span>
+                                    </li>
+                                    <a ng-href="{{ '{{ selectedRepo.url }}' }}" target="_blank">
+                                        <li class="list-group-item list-group-item-action">View more!</li>
+                                    </a>
+                                </ul>
+                            </div>
+                            <div class="col col-md-8">
+                                <div ng-bind-html="selectedIssue.node.bodyHTML"></div>
+                                <a class="btn btn-primary btn-lg btn-block"
+                                   ng-href="{{ '{{ selectedIssue.node.url }}' }}"
+                                   target="_blank">Get Involved!</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <style type="text/css">
             html, body {
                 height: 100%;
@@ -11,15 +66,24 @@
                 min-height: 100%;
                 background: #fff;
             }
+
             .card {
                 border-top-width: 5px;
+                cursor: pointer;
             }
+
             .text-muted {
                 fill: #6c757d !important;
             }
+
+            .modal-lg {
+                max-width: 90vw;
+            }
         </style>
-        <div  id="wrapper" ng-if="blockLoading" style="height: 100vh; background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
-            <div class="card" style="display: inline-block; position: fixed; top: 0; bottom: 0; left: 0; right: 0; width: 200px; height: 200px; margin: auto;">
+        <div id="wrapper" ng-if="blockLoading"
+             style="height: 100vh; background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
+            <div class="card"
+                 style="display: inline-block; position: fixed; top: 0; bottom: 0; left: 0; right: 0; width: 200px; height: 200px; margin: auto;">
                 <br>
                 <br>
                 <i class="fa fa-cog fa-spin" style="font-size:60px; margin-left:70px"></i>
@@ -28,72 +92,68 @@
                 </span>
             </div>
         </div>
-        <div class="jumbotron jumbotron-fluid" ng-if="!blockLoading" style="background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat; min-width: 100%; height: auto; min-height: 100%"">
-            <div class="container" style="height: 100%">
-              <div class="row" style="margin-bottom: 20px;">
-                    <div class="col col-md-3"><h2>Because...</h2></div>
-                    <div class="col col-md-1"></div>
-                    <div class="col col-md-8"><h2>We Recommend...</h2></div>
-                </div>
-              <div ng-controller="recommendationDictController">
-                <div class="card-deck">
-                    <div ng-repeat="recommendation in recommendations">
-                        <div class="row" ng-if="recommendation.length > 1">
-                            <div class="col col-md-3">
-                                <div class="card" style="height: 100%;"
-                                     ng-style="{'border-top-color': userProjects[$index].languages.edges[0].node.color}">
-                                    <div class="card-body">
-                                        <h5 class="card-title" ng-bind="userProjects[$index].reason"></h5>
-                                        <h6 class="card-subtitle text-muted" ng-bind="userProjects[$index].name"></h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col col-md-1"></div>
-                            <div class="col col-md-8">
-                                <div class="card-deck">
-                                    <div class="card" ng-repeat="reporecommendation in recommendation"
-                                         ng-style="{'border-top-color': reporecommendation.languages.edges[0].node.color}">
-                                        <div class="card-body">
-                                            <h5 class="card-title" ng-bind="reporecommendation.name"></h5>
-                                            <h6 class="card-subtitle text-muted">
-                                                <div ng-bind-html="reporecommendation.shortDescriptionHTML"></div>
-                                            </h6>
-                                        </div>
-                                        <div class="card-footer">
-                                            <svg class="octicon octicon-star text-muted" viewBox="0 0 14 16" version="1.1" width="14" height="16" role="img"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74L14 6z"></path></svg>
-                                            <span ng-bind="reporecommendation.stargazers.totalCount" class="text-muted"></span>
-                                            <svg class="octicon octicon-repo-forked text-muted" viewBox="0 0 10 16" version="1.1" width="10" height="16" role="img"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg>
-                                            <span ng-bind="reporecommendation.forkCount" class="text-muted"></span>
-                                            <br />
-                                            <div class="badge badge-pill badge-info"
-                                                  ng-repeat="topic in reporecommendation.repositoryTopics.edges | limitTo: 3"
-                                                  ng-bind="topic.node.topic.name" style="margin-right: 5px"></span>
-                                        </div>
-                                        {#                                                </div>#}
-                                        {#                                                <ul class="list-group list-group-flush">#}
-                                        {#                                                    <li class="list-group-item"><span#}
-                                        {#                                                            ng-bind-html="reporecommendation.openIssues.edges[0].node.bodyHTML"></span>#}
-                                        {#                                                    </li>#}
-                                        {#                                                    <a type="button"#}
-                                        {#                                                       class="btn btn-primary"#}
-                                        {#                                                       ng-href="{{ '{{reporecommendation.openIssues.edges[0].node.url}}' }}">Give#}
-                                        {#                                                        it a shot</a>#}
-                                        {#                                                </ul>#}
-                                        {#                                            </div>#}
-                                        {#                                            <p class="card-text">#}
-                                        {#                                                <small class="text-muted"#}
-                                        {#                                                       ng-bind="reporecommendation.reason"></small>#}
-                                        {#                                            </p>#}
-                                    </div>
+        <div class="jumbotron jumbotron-fluid" ng-if="!blockLoading"
+             style="background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat; min-width: 100%; height: auto; min-height: 100%"
+        ">
+        <div class="container" style="height: 100%">
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col col-md-3"><h2>Because...</h2></div>
+                <div class="col col-md-1"></div>
+                <div class="col col-md-8"><h2>We Recommend...</h2></div>
+            </div>
+            <div class="card-deck">
+                <div ng-repeat="recommendation in recommendations" style="margin-bottom: 20px">
+                    <div class="row" ng-if="recommendation.length > 1">
+                        <div class="col col-md-3">
+                            <div class="card" style="height: 100%;"
+                                 ng-style="{'border-top-color': userProjects[$index].languages.edges[0].node.color}">
+                                <div class="card-body">
+                                    <h5 class="card-title" ng-bind="userProjects[$index].reason"></h5>
+                                    <h6 class="card-subtitle text-muted"
+                                        ng-bind="userProjects[$index].name"></h6>
                                 </div>
                             </div>
                         </div>
-                        <div class="container" ng-if="!$last">
-                            <hr/>
+                        <div class="col col-md-1"></div>
+                        <div class="col col-md-8">
+                            <div class="card-deck">
+                                <div class="card" ng-repeat="reporecommendation in recommendation"
+                                     ng-style="{'border-top-color': reporecommendation.languages.edges[0].node.color}"
+                                     data-toggle="modal" data-target=".modal"
+                                     ng-click="selectRepo(reporecommendation)">
+                                    <div class="card-body">
+                                        <h5 class="card-title" ng-bind="reporecommendation.name"></h5>
+                                        <h6 class="card-subtitle text-muted">
+                                            <div ng-bind-html="reporecommendation.shortDescriptionHTML"></div>
+                                        </h6>
+                                    </div>
+                                    <div class="card-footer">
+                                        <svg class="octicon octicon-star text-muted" viewBox="0 0 14 16"
+                                             version="1.1" width="14" height="16" role="img">
+                                            <path fill-rule="evenodd"
+                                                  d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74L14 6z"></path>
+                                        </svg>
+                                        <span ng-bind="reporecommendation.stargazers.totalCount"
+                                              class="text-muted"></span>
+                                        <svg class="octicon octicon-repo-forked text-muted" viewBox="0 0 10 16"
+                                             version="1.1" width="10" height="16" role="img">
+                                            <path fill-rule="evenodd"
+                                                  d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path>
+                                        </svg>
+                                        <span ng-bind="reporecommendation.forkCount" class="text-muted"></span>
+                                        <br/>
+                                        <div class="badge badge-pill badge-info"
+                                             ng-repeat="topic in reporecommendation.repositoryTopics.edges | limitTo: 3"
+                                             ng-bind="topic.node.topic.name" style="margin-right: 5px"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 {% endblock %}
