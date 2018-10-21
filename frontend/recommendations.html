@@ -9,10 +9,31 @@
 {#{% endwith %}#}
 {% extends "base.html" %}
 {% block body %}
-    <div id="r1">
-        <div class="jumbotron jumbotron-fluid">
+    <div id="r1" ng-controller="recommendationDictController">
+        <style type="text/css">
+            html, body {
+                height: 100%;
+                margin: 0;
+            }
+
+            #wrapper {
+                min-height: 100%;
+                background: #fff;
+            }
+        </style>
+        <div  id="wrapper" ng-if="blockLoading" style="height: 100vh; background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
+            <div class="card" style="display: inline-block; position: fixed; top: 0; bottom: 0; left: 0; right: 0; width: 200px; height: 200px; margin: auto;">
+                <br>
+                <br>
+                <i class="fa fa-cog fa-spin" style="font-size:60px; margin-left:70px"></i>
+                <span style="font-size:30px; margin-left:25px">
+                    Calculating
+                </span>
+            </div>
+        </div>
+        <div class="jumbotron jumbotron-fluid" ng-if="!blockLoading" style="background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
             <div class="container">
-                <div class="card-deck" ng-controller="recommendationDictController">
+                <div class="card-deck">
                     <div ng-repeat="recommendation in recommendations">
                         <br>
                         <div class="card">
