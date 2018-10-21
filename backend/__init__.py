@@ -24,8 +24,8 @@ app.register_blueprint(api, url_prefix='/api')
 
 @app.route('/')
 def index():
-    if github.authorized:
-        return redirect(url_for('recommendations'))
+    #if github.authorized:
+    #    return redirect(url_for('recommendations'))
 
     return render_template('index.html')
 

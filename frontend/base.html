@@ -26,7 +26,7 @@
     </style>
 </head>
 <body>
-<div ng-app="contributetotechapp">
+<div ng-app="contributetotechapp" style="background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
     {% block body %}{% endblock %}
 </div>
 <script>
@@ -47,9 +47,11 @@
     });
 
     app.controller('recommendationDictController', function recommendationDictController($scope, recommendationDictFactory) {
+        $scope.blockLoading = true;
         recommendationDictFactory.query(function (data) {
             $scope.userProjects = data.map(function(tuple) { return tuple[0] });
             $scope.recommendations = data.map(function(tuple) { return [tuple[1], tuple[2], tuple[3]]});
+            $scope.blockLoading = false;
         });
     });
 
