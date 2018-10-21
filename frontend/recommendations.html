@@ -1,12 +1,3 @@
-{#{% with messages = get_flashed_messages() %}#}
-{#  {% if messages %}#}
-{#    <ul class=flashes>#}
-{#    {% for message in messages %}#}
-{#      <li>{{ message }}</li>#}
-{#    {% endfor %}#}
-{#    </ul>#}
-{#  {% endif %}#}
-{#{% endwith %}#}
 {% extends "base.html" %}
 {% block body %}
     <div id="r1" ng-controller="recommendationDictController">
@@ -20,6 +11,12 @@
                 min-height: 100%;
                 background: #fff;
             }
+            .card {
+                border-top-width: 5px;
+            }
+            .text-muted {
+                fill: #6c757d !important;
+            }
         </style>
         <div  id="wrapper" ng-if="blockLoading" style="height: 100vh; background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
             <div class="card" style="display: inline-block; position: fixed; top: 0; bottom: 0; left: 0; right: 0; width: 200px; height: 200px; margin: auto;">
@@ -32,157 +29,71 @@
             </div>
         </div>
         <div class="jumbotron jumbotron-fluid" ng-if="!blockLoading" style="background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
-            <div class="container">
+            <div class="container" style="height: 100%">
+              <div class="row" style="margin-bottom: 20px;">
+                    <div class="col col-md-3"><h2>Because...</h2></div>
+                    <div class="col col-md-1"></div>
+                    <div class="col col-md-8"><h2>We Recommend...</h2></div>
+                </div>
+              <div ng-controller="recommendationDictController">
                 <div class="card-deck">
                     <div ng-repeat="recommendation in recommendations">
-                        <br>
-                        <div class="card">
-                            <div class="card-body">
-                                <nav aria-label="Page navigation example">
-                                    <h5 class="card-title">Because you ❤ <b><span ng-bind="userProjects[$index].languages.edges[0].node.name"></span></b></h5>
-                                    <p class="card-text">
-                                    </p>
-                            </div>
-                        </div>
-                        <div ng-repeat="reporecommendation in recommendation">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title" ></h5>
-                                    <p class="card-text">We recommend </p>
-                                    <div class="card" width="50px">
-                                        <div class="card-body">
-                                            <h5 class="card-title" ng-bind="reporecommendation.name"></h5>
-                                            <div class="card-text" ><span>{{ '{{reporecommendation.shortDescriptionHTML | limitTo:50}}{{reporecommendation.shortDescriptionHTML.length > 50 ? "..." : ""}}' }}</span></div>
-                                        </div>
-                                          <ul class="list-group list-group-flush">
-                                            <li class="list-group-item"><span>{{ '{{reporecommendation.openIssues.edges[0].node.bodyHTML | limitTo:50}}{{recommendation[0].openIssues.edges[0].node.bodyHTML.length > 50 ? "..." : ""}}' }}</span>
-                                            </li><a type="button" class="btn btn-primary" ng-href="{{ '{{reporecommendation.openIssues.edges[0].node.url}}' }}">Give it a shot</a>
-                                          </ul>
+                        <div class="row" ng-if="recommendation.length > 1">
+                            <div class="col col-md-3">
+                                <div class="card" style="height: 100%;"
+                                     ng-style="{'border-top-color': userProjects[$index].languages.edges[0].node.color}">
+                                    <div class="card-body">
+                                        <h5 class="card-title" ng-bind="userProjects[$index].reason"></h5>
+                                        <h6 class="card-subtitle text-muted" ng-bind="userProjects[$index].name"></h6>
                                     </div>
-                                    <p class="card-text">
-                                        <small class="text-muted" ng-bind="reporecommendation.reason"></small>
-                                    </p>
                                 </div>
                             </div>
+                            <div class="col col-md-1"></div>
+                            <div class="col col-md-8">
+                                <div class="card-deck">
+                                    <div class="card" ng-repeat="reporecommendation in recommendation"
+                                         ng-style="{'border-top-color': reporecommendation.languages.edges[0].node.color}">
+                                        <div class="card-body">
+                                            <h5 class="card-title" ng-bind="reporecommendation.name"></h5>
+                                            <h6 class="card-subtitle text-muted">
+                                                <div ng-bind-html="reporecommendation.shortDescriptionHTML"></div>
+                                            </h6>
+                                        </div>
+                                        <div class="card-footer">
+                                            <svg class="octicon octicon-star text-muted" viewBox="0 0 14 16" version="1.1" width="14" height="16" role="img"><path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74L14 6z"></path></svg>
+                                            <span ng-bind="reporecommendation.stargazers.totalCount" class="text-muted"></span>
+                                            <svg class="octicon octicon-repo-forked text-muted" viewBox="0 0 10 16" version="1.1" width="10" height="16" role="img"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 0 0-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 0 0 2 1a1.993 1.993 0 0 0-1 3.72V6.5l3 3v1.78A1.993 1.993 0 0 0 5 15a1.993 1.993 0 0 0 1-3.72V9.5l3-3V4.72A1.993 1.993 0 0 0 8 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg>
+                                            <span ng-bind="reporecommendation.forkCount" class="text-muted"></span>
+                                            <br />
+                                            <div class="badge badge-pill badge-info"
+                                                  ng-repeat="topic in reporecommendation.repositoryTopics.edges | limitTo: 3"
+                                                  ng-bind="topic.node.topic.name" style="margin-right: 5px"></span>
+                                        </div>
+                                        {#                                                </div>#}
+                                        {#                                                <ul class="list-group list-group-flush">#}
+                                        {#                                                    <li class="list-group-item"><span#}
+                                        {#                                                            ng-bind-html="reporecommendation.openIssues.edges[0].node.bodyHTML"></span>#}
+                                        {#                                                    </li>#}
+                                        {#                                                    <a type="button"#}
+                                        {#                                                       class="btn btn-primary"#}
+                                        {#                                                       ng-href="{{ '{{reporecommendation.openIssues.edges[0].node.url}}' }}">Give#}
+                                        {#                                                        it a shot</a>#}
+                                        {#                                                </ul>#}
+                                        {#                                            </div>#}
+                                        {#                                            <p class="card-text">#}
+                                        {#                                                <small class="text-muted"#}
+                                        {#                                                       ng-bind="reporecommendation.reason"></small>#}
+                                        {#                                            </p>#}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container" ng-if="!$last">
+                            <hr/>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    {#    <div id="r2">#}
-    {#        <div class="jumbotron jumbotron-fluid">#}
-    {#            <div class="container">#}
-    {#                <div class="card-deck">#}
-    {#                    <div class="card">#}
-    {#                        <div class="card-body">#}
-    {#                            <h5 class="card-title">Card title</h5>#}
-    {#                            <p class="card-text">Because you use <span ng-bind="userProjects[1]"></span></p>#}
-    {#                            <p class="card-text">#}
-    {#                                <small class="text-muted">Last updated 3 mins ago</small>#}
-    {#                            </p>#}
-    {#                        </div>#}
-    {#                    </div>#}
-    {#                    <div class="card">#}
-    {#                        <div class="card-body">#}
-    {#                            <h5 class="card-title">Card title</h5>#}
-    {#                            <p class="card-text">We recommend </p>#}
-    {#                            <div class="card">#}
-    {#                                <div class="card-body">#}
-    {#                                    <h5 class="card-title"><span ng-bind="recommendations[1]"></span></h5>#}
-    {#                                    <p class="card-text">[Repo text]</p>#}
-    {#                                </div>#}
-    {#                            </div>#}
-    {#                            <p class="card-text">#}
-    {#                                <small class="text-muted">Last updated 3 mins ago</small>#}
-    {#                            </p>#}
-    {#                        </div>#}
-    {#                    </div>#}
-    {#                </div>#}
-    {#            </div>#}
-    {#        </div>#}
-    {#        <nav aria-label="Page navigation example">#}
-    {#            <ul class="pagination">#}
-    {#                <li class="page-item"><a class="page-link" href="/">Previous</a></li>#}
-    {#                <li class="page-item"><a class="page-link" href="recommendations/1">1</a></li>#}
-    {#                <li class="page-item"><a class="page-link" href="recommendations/2">2</a></li>#}
-    {#                <li class="page-item"><a class="page-link" href="recommendations/3">3</a></li>#}
-    {#                <li class="page-item"><a class="page-link" href="/">Next</a></li>#}
-    {#            </ul>#}
-    {#        </nav>#}
-    {#    </div>#}
-    {#    <script type="text/babel">#}
-    {##}
-    {#        let style = {#}
-    {#            color: "#fff"#}
-    {#        };#}
-    {#        ReactDOM.render(#}
-    {#            <div className="jumbotron jumbotron-fluid">#}
-    {#                <div className="container">#}
-    {#                    <div className="card-deck">#}
-    {#                        <div className="card">#}
-    {#                            <div className="card-body">#}
-    {#                                <h5 className="card-title">Card title</h5>#}
-    {#                                <p className="card-text">Because you use [Something]</p>#}
-    {#                                <p className="card-text">#}
-    {#                                    <small className="text-muted">Last updated 3 mins ago</small>#}
-    {#                                </p>#}
-    {#                            </div>#}
-    {#                        </div>#}
-    {#                        <div className="card">#}
-    {#                            <div className="card-body">#}
-    {#                                <h5 className="card-title">Card title</h5>#}
-    {#                                <p className="card-text">We recommend [something else]</p>#}
-    {#                                <div className="card">#}
-    {#                                    <div className="card-body">#}
-    {#                                        <h5 className="card-title">[Repo name]</h5>#}
-    {#                                        <p className="card-text">[Repo text]</p>#}
-    {#                                    </div>#}
-    {#                                </div>#}
-    {#                                <p className="card-text">#}
-    {#                                    <small className="text-muted">Last updated 3 mins ago</small>#}
-    {#                                </p>#}
-    {#                            </div>#}
-    {#                        </div>#}
-    {#                    </div>#}
-    {#                </div>#}
-    {#            </div>,#}
-    {#            document.getElementById('r1')#}
-    {#        );#}
-    {##}
-    {#        ReactDOM.render(#}
-    {#            <div className="jumbotron jumbotron-fluid">#}
-    {#                <div className="container">#}
-    {#                    <div className="card-deck">#}
-    {#                        <div className="card">#}
-    {#                            <div className="card-body">#}
-    {#                                <h5 className="card-title">Card title</h5>#}
-    {#                                <p className="card-text">Because you use [Something]</p>#}
-    {#                                <p className="card-text">#}
-    {#                                    <small className="text-muted">Last updated 3 mins ago</small>#}
-    {#                                </p>#}
-    {#                            </div>#}
-    {#                        </div>#}
-    {#                        <div className="card">#}
-    {#                            <div className="card-body">#}
-    {#                                <h5 className="card-title">Card title</h5>#}
-    {#                                <p className="card-text">We recommend [something else]</p>#}
-    {#                                <div className="card">#}
-    {#                                    <div className="card-body">#}
-    {#                                        <h5 className="card-title">[Repo name]</h5>#}
-    {#                                        <p className="card-text">[Repo text]</p>#}
-    {#                                    </div>#}
-    {#                                </div>#}
-    {#                                <p className="card-text">#}
-    {#                                    <small className="text-muted">Last updated 3 mins ago</small>#}
-    {#                                </p>#}
-    {#                            </div>#}
-    {#                        </div>#}
-    {#                    </div>#}
-    {#                </div>#}
-    {#            </div>,#}
-    {#            document.getElementById('r2')#}
-    {#        );#}
-    {##}
-    {#    </script>#}
 {% endblock %}

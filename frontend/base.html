@@ -14,6 +14,16 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-resource/1.7.5/angular-resource.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.5/angular-sanitize.js"></script>
+    <style>
+        html,
+        body,
+        body > div,
+        body > div > div,
+        body > div > div > .jumbotron {
+            height: 100%;
+            min-height: 100%;
+        }
+    </style>
 </head>
 <body>
 <div ng-app="contributetotechapp" style="background-image: url('http://bg.siteorigin.com/image/generate?color=%23f9f9f9&pattern=connect&blend=40&intensity=10&noise=0'); background-repeat: repeat;">
@@ -37,11 +47,10 @@
     });
 
     app.controller('recommendationDictController', function recommendationDictController($scope, recommendationDictFactory) {
-        $scope.recommendations = [{}, {}, {}];
         $scope.blockLoading = true;
         recommendationDictFactory.query(function (data) {
             $scope.userProjects = data.map(function(tuple) { return tuple[0] });
-            $scope.recommendations = data.map(function(tuple) { return [tuple[1], tuple[2], tuple[3]] });
+            $scope.recommendations = data.map(function(tuple) { return [tuple[1], tuple[2], tuple[3]]});
             $scope.blockLoading = false;
         });
     });

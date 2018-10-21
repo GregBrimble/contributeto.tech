@@ -1,7 +1,10 @@
 from json import JSONDecodeError, dumps
+from random import choice
 
 from flask import Blueprint, Response, jsonify
 from flask_dance.contrib.github import github
+
+from backend.queries import interested_in_repositories_query, contributed_to_repositories_query
 
 api = Blueprint('api', __name__)
 
@@ -16,121 +19,33 @@ def make_request(query, variables=None):
 
 
 def get_contributed_to_repositories():
-    return make_request("""
-    fragment contributedToDetails on Repository {
-      name
-      url
-      stargazers{
-        totalCount
-      }
-      forkCount
-      shortDescriptionHTML
-      languages(first:3, orderBy:{field:SIZE, direction: DESC}) {
-        edges {
-          node {
-            name
-            color
-          }
-        }
-      }
-      repositoryTopics(first:20){
-        edges{
-          node{
-            topic{
-              name
-              relatedTopics{
-                name
-              }
-              stargazers{
-                totalCount
-              }
-            }
-          }
-        }
-      }
-    }
-
-    query contributedToRepositories {
-      viewer{
-        repositoriesContributedTo(first:3, orderBy:{field:STARGAZERS,direction:DESC}){
-          edges{
-            node{
-              ...contributedToDetails
-            }
-          }
-        }
-      }
-    }
-    """)
+    return make_request(contributed_to_repositories_query)
 
 
-def get_recommendations_for_repository(repository):
-    response = make_request("""
-    
-fragment contributedToDetails on Repository {
-  name
-  url
-  stargazers{
-    totalCount
-  }
-  forkCount
-  shortDescriptionHTML
-  languages(first:3, orderBy:{field:SIZE, direction: DESC}) {
-    edges {
-      node {
-        name
-        color
-      }
+def generate_query_from_repository(repository):
+    repository_language = repository['languages']['edges'][0]['node']['name']
+    language_query = {
+        'string': 'language:{language}'.format(language=repository_language),
+        'reason': 'Because you ❤ {language}'.format(language=repository_language)
     }
-  }
-  repositoryTopics(first:20){
-    edges{
-      node{
-        topic{
-          name
-          relatedTopics{
-            name
-          }
-          stargazers{
-            totalCount
-          }
-        }
-      }
-    }
-  }
-}
 
-fragment interestedInDetails on Repository {
-  ...contributedToDetails
-  openIssues: issues(states:OPEN, first:5, orderBy:{field:CREATED_AT, direction:ASC}){
-    totalCount
-    edges{
-      node{
-        url
-        title
-        bodyHTML
-        reactions{
-          totalCount
-        }
-      }
-    }
-  }
-}
+    query = language_query
 
-query interestedInRepositories($queryString: String!) {
-  search(query:$queryString, type:REPOSITORY, first:5){
-    edges{
-      node{
-        ... on Repository {
-          name
-          ...interestedInDetails
+    if repository['repositoryTopics']['edges']:
+        random_repository_topic = choice(repository['repositoryTopics']['edges'])['node']['topic']['name']
+        topics_query = {
+            'string': 'topic:{topic}'.format(topic=random_repository_topic),
+            'reason': 'Because you ❤ working with {topic}'.format(topic=random_repository_topic)
         }
-      }
-    }
-  }
-}
-""", variables={'queryString': 'language:Python'})
 
+        query = choice([language_query, topics_query])
+
+    return query
+
+
+def get_recommendations_for_repository(repository, query):
+    full_query_string = '{query_string} help-wanted-issues:>3'.format(query_string=query['string'])
+    response = make_request(interested_in_repositories_query, variables={'queryString': full_query_string})
     return [edge['node'] for edge in response['data']['search']['edges']]
 
 
@@ -138,11 +53,12 @@ query interestedInRepositories($queryString: String!) {
 def get_recommendations():
     contributed_to_repositories = get_contributed_to_repositories()
     recommendations = []
-    print(contributed_to_repositories)
 
     for repository in contributed_to_repositories['data']['viewer']['repositoriesContributedTo']['edges']:
+        query = generate_query_from_repository(repository['node'])
+        repository['node']['reason'] = query['reason']
         repository_recommendations = [repository['node']]
-        repository_recommendations.extend(get_recommendations_for_repository(repository['node']))
+        repository_recommendations.extend(get_recommendations_for_repository(repository['node'], query))
         recommendations.append(repository_recommendations)
 
     return jsonify(recommendations)
