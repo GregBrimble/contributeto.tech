@@ -1,4 +1,4 @@
-# [https://contributeto.tech/](contributeto.tech)
+# [contributeto.tech](https://contributeto.tech/)
 Built for [HackUPC](https://hackupc.com/) 2018 by [Greg Brimble](https://gregbrimble.com/) and [James O'Donnell](https://www.james-odonnell.com/).
 
 ## Inspiration
